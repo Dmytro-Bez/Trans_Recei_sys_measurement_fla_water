@@ -1,4 +1,7 @@
-//#include "funk.h"
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
 #define SENSOR 0
 
 int sens_val;

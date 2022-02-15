@@ -1,27 +1,25 @@
-#include <SPI.h>
+#include <SPI.h>                                                    /*Added libery sys*/
 #include <nRF24L01.h>
 #include <RF24.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-const char* ssid = "EE";                        //Login
-const char* password = "EE@05kilogram";         //Password  
-const char* server = "192.168.1.188";
-RF24 radio(4, 5);                               //CE, CSN
+const char* ssid = "**";                                            //Login
+const char* password = "**";                                        //Password  
+const char* server = "192.168.1.188";                               //IP web
+RF24 radio(4, 5);                                                   //CE, CSN pin connect to the SPI
 const byte address[6] = "00001";
 String apiKey = "C25ICK6FHOR7PST4";
-//WiFiClient client;
-String my_Api_key = "Y";
 
-void wifi_init();
+void wifi_init();                                                   //Prototype connecting Wifi
 
 void setup() {
   Serial.begin(115200);
-  radio.begin();
-  radio.openReadingPipe(0, address);
+  radio.begin();                                                    //Lis. radio connect
+  radio.openReadingPipe(0, address);                                //Open wire radio
   radio.setPALevel(RF24_PA_MIN);
-  radio.startListening();
-  wifi_init();
+  radio.startListening();                                           //Start listening radio connections
+  wifi_init();                                                      //Start Wifi
   Serial.println("INIT");
 }
 

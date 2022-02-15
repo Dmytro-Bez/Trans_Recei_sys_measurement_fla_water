@@ -20,7 +20,7 @@ void setup() {
 }
 
 void loop() {
-currentMillis = millis();                               //Call delay functions
+  currentMillis = millis();                               //Call delay functions
   if(currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
     sens_val = analogRead(0);

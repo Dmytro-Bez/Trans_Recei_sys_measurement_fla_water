@@ -2,15 +2,16 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 #include <WiFi.h>
-//#include <HTTPClient.h>
+#include <HTTPClient.h>
 
 const char* ssid = "EE";                        //Login
 const char* password = "EE@05kilogram";         //Password  
-const char* server = "api.thingspeak.com";
+const char* server = "192.168.1.188";
 RF24 radio(4, 5);                               //CE, CSN
 const byte address[6] = "00001";
 String apiKey = "C25ICK6FHOR7PST4";
-WiFiClient client;
+//WiFiClient client;
+String my_Api_key = "Y";
 
 void wifi_init();
 
@@ -27,31 +28,25 @@ void setup() {
 void loop() {
   if ((WiFi.status() == WL_CONNECTED)){                             //Check to connect for the wifi
     if (radio.available()) {
-      int text;
-      radio.read(&text, sizeof(text));
+      int dates;
+      radio.read(&dates, sizeof(dates));
       Serial.print("Level water=");
-      Serial.println(text);
-      if (client.connect(server, 80)){
-        Serial.println("Server HTTP work");
-        String postStr = apiKey;
-        postStr += "&field1=";
-        postStr += String(text);
-        postStr += "\r\n\r\n\r\n\r\n";
-
-        client.print("POST /update HTTP/1.1\n");
-        client.print("Host: api.thingspeak.com\n");
-        client.print("Connection: close\n");
-        client.print("X-THINGSPEAKAPIKEY: " + apiKey + "\n");
-        client.print("Content-Type: application/x-www-form-urlencoded\n");
-        client.print("Content-Length: ");
-        client.print(postStr.length());
-        client.print("\n\n");
-        client.print(postStr);
-      } else {
-        Serial.print("Error HTTP!");
-      }
-      client.stop();
-    }
+      Serial.println(dates);
+     HTTPClient http;   
+     http.begin("http://192.168.1.188:7000/send_data");             //Specify destination for HTTP request
+     http.addHeader("Content-Type", "text");                        //Specify content-type header
+     String httpRequestData =  String(dates);
+     int httpResponseCode = http.POST(httpRequestData);             //Send the actual POST request
+     if(httpResponseCode>0){
+      String response = http.getString();                           //Get the response to the request
+      Serial.println(httpResponseCode);                             //Print return code
+      Serial.println(response);                                     //Print request answer
+     } else {
+      Serial.print("Error on sending POST: ");
+      Serial.println(httpResponseCode);
+     }
+     http.end();                                                    //Free resources
+   }
   }
 }
 

@@ -30,21 +30,21 @@ void loop() {
       radio.read(&dates, sizeof(dates));
       Serial.print("Level water=");
       Serial.println(dates);
-     HTTPClient http;   
-     http.begin("http://192.168.1.188:7000/send_data");             //Specify destination for HTTP request
-     http.addHeader("Content-Type", "text");                        //Specify content-type header
-     String httpRequestData =  String(dates);
-     int httpResponseCode = http.POST(httpRequestData);             //Send the actual POST request
-     if(httpResponseCode>0){
-      String response = http.getString();                           //Get the response to the request
-      Serial.println(httpResponseCode);                             //Print return code
-      Serial.println(response);                                     //Print request answer
-     } else {
-      Serial.print("Error on sending POST: ");
-      Serial.println(httpResponseCode);
-     }
-     http.end();                                                    //Free resources
-   }
+      HTTPClient http;   
+      http.begin("http://192.168.1.188:7000/send_data");             //Specify destination for HTTP request
+      http.addHeader("Content-Type", "text");                        //Specify content-type header
+      String httpRequestData =  String(dates);
+      int httpResponseCode = http.POST(httpRequestData);             //Send the actual POST request
+      if(httpResponseCode>0){
+        String response = http.getString();                           //Get the response to the request
+        Serial.println(httpResponseCode);                             //Print return code
+        Serial.println(response);                                     //Print request answer
+      } else {
+        Serial.print("Error on sending POST: ");
+        Serial.println(httpResponseCode);
+      }
+      http.end();                                                    //Free resources
+    }
   }
 }
 
